@@ -4,38 +4,26 @@ from app import app
 from models import db, Restaurant, Pizza, RestaurantPizza
 
 with app.app_context():
-
-    # This will delete any existing rows
-    # so you can run the seed file multiple times without having duplicate entries in your database
     print("Deleting data...")
+    RestaurantPizza.query.delete()
     Pizza.query.delete()
     Restaurant.query.delete()
-    RestaurantPizza.query.delete()
 
     print("Creating restaurants...")
-    shack = Restaurant(name="Karen's Pizza Shack", address='address1')
-    bistro = Restaurant(name="Sanjay's Pizza", address='address2')
-    palace = Restaurant(name="Kiki's Pizza", address='address3')
-    restaurants = [shack, bistro, palace]
+    shack = Restaurant(name="Karen's Pizza Shack", address="123 Main St")
+    bistro = Restaurant(name="Sanjay's Pizza", address="456 Elm St")
+    palace = Restaurant(name="Kiki's Pizza", address="789 Oak St")
 
     print("Creating pizzas...")
+    cheese = Pizza(name="Cheese Pizza", ingredients="Dough, Tomato Sauce, Cheese")
+    pepperoni = Pizza(name="Pepperoni Pizza", ingredients="Dough, Tomato Sauce, Cheese, Pepperoni")
+    veggie = Pizza(name="Veggie Pizza", ingredients="Dough, Tomato Sauce, Cheese, Veggies")
 
-    cheese = Pizza(name="Emma", ingredients="Dough, Tomato Sauce, Cheese")
-    pepperoni = Pizza(
-        name="Geri", ingredients="Dough, Tomato Sauce, Cheese, Pepperoni")
-    california = Pizza(
-        name="Melanie", ingredients="Dough, Sauce, Ricotta, Red peppers, Mustard")
-    pizzas = [cheese, pepperoni, california]
+    print("Creating restaurant-pizza relationships...")
+    rp1 = RestaurantPizza(price=10, restaurant=shack, pizza=cheese)
+    rp2 = RestaurantPizza(price=12, restaurant=bistro, pizza=pepperoni)
+    rp3 = RestaurantPizza(price=15, restaurant=palace, pizza=veggie)
 
-    print("Creating RestaurantPizza...")
-
-    pr1 = RestaurantPizza(restaurant=shack, pizza=cheese, price=1)
-    pr2 = RestaurantPizza(restaurant=bistro, pizza=pepperoni, price=4)
-    pr3 = RestaurantPizza(restaurant=palace, pizza=california, price=5)
-    restaurantPizzas = [pr1, pr2, pr3]
-    db.session.add_all(restaurants)
-    db.session.add_all(pizzas)
-    db.session.add_all(restaurantPizzas)
+    db.session.add_all([shack, bistro, palace, cheese, pepperoni, veggie, rp1, rp2, rp3])
     db.session.commit()
-
-    print("Seeding done!")
+    print("Seeding completed!")
